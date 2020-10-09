@@ -1,5 +1,10 @@
 package com.appian.deckofcards.enums;
 
+/**
+ * 
+ * @author JOSE MANUEL
+ *
+ */
 public enum Face {
 	ACE {
 		public String toString() {
@@ -33,7 +38,7 @@ public enum Face {
 	},
 	SEVEN {
 		public String toString() {
-			return "Seven";
+			return "7";
 		}
 	},
 	EIGHT {

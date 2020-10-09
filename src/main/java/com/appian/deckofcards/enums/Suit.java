@@ -1,5 +1,10 @@
 package com.appian.deckofcards.enums;
 
+/**
+ * 
+ * @author JOSE MANUEL
+ *
+ */
 public enum Suit {
 
 	HEARTS {

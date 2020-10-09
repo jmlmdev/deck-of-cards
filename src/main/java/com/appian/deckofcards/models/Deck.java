@@ -1,75 +1,73 @@
 package com.appian.deckofcards.models;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import com.appian.deckofcards.enums.Face;
 import com.appian.deckofcards.enums.Suit;
 
-public class Deck {
+/**
+ * 
+ * @author JOSE MANUEL
+ *
+ */
+public class Deck implements IDeck {
 
-	private Set<Card> cards = new LinkedHashSet<Card>();
+	private List<Card> cards = new ArrayList<Card>();
 
 	public Deck() {
-		Stream.of(Face.values()).forEach(face -> {
-			Stream.of(Suit.values()).forEach(suit -> cards.add(new Card(suit, face)));
+		Stream.of(Suit.values()).forEach(suit -> {
+			Stream.of(Face.values()).forEach(face -> cards.add(new Card(suit, face)));
 		});
 	}
 
-	public Set<Card> getCards() {
+	public List<Card> getCards() {
 		return cards;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((cards == null) ? 0 : cards.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-
-		List<Card> obj1Cards = new ArrayList<>(this.getCards());
-		List<Card> obj2Cards = new ArrayList<>(((Deck) obj).getCards());
-
-		if (!obj1Cards.equals(obj2Cards)) {
-			return false;
-		}
-		return true;
-	}
-
-	public void setCards(Set<Card> cards) {
+	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
 
 	/**
-	 * Randomize cards in the deck.
+	 * Shuffle cards in the deck.
 	 */
 	public void shuffle() {
 
+		Random random = new Random();
+
+		IntStream.rangeClosed(0, this.getCards().size() - 1).forEach(index -> {
+			// Random pointer between 0 and 52
+			int randomPointer = index + random.nextInt(52 - index);
+
+			// swapping the elements
+			Card randomCard = this.getCards().get(randomPointer);
+			this.getCards().set(randomPointer, this.getCards().get(index));
+			this.getCards().set(index, randomCard);
+		});
 	}
 
 	/**
 	 * 
 	 * @return Returns one card from the deck, if the deck is empty, no card will be
 	 *         returned.
+	 * @throws IllegalStateException
 	 */
 	public Card dealOneCard() {
-		return null;
+		if (this.getCards().isEmpty()) {
+			throw new IllegalStateException("A card can not be dealed from an empty deck");
+		}
+		Card dealedCard = new Card(this.getCards().get(0).getSuit(), this.getCards().get(0).getFace());
+		this.getCards().remove(0);
+		return dealedCard;
 	}
 
 	@Override
 	public String toString() {
-		return "Deck: " + cards;
+		return "Cards: " + cards.toString();
 	}
 
 }
